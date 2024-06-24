@@ -1,0 +1,51 @@
+module-name: Banco
+api-version: 1.0
+
+server:
+  port : 8084
+
+keycloak-host: localhost:8080
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/banco
+    driver-class-name: org.postgresql.Driver
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: none
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+  devtools:
+    restart:
+      enabled: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://${keycloak-host}/realms/banco
+          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
+
+keycloak:
+  client-id: banco
+  client-secret: banco_secret
+  token-uri: http://${keycloak-host}/realms/banco/protocol/openid-connect/token
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+logging:
+  level:
+    org.springframework.web: DEBUG
+    #org.keycloak: INFO
+    #org.springframework.security: trace
+    #org.hibernate: DEBUG
+
+
+
+
